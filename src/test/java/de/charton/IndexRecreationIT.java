@@ -13,6 +13,7 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 @Import(ElasticServiceApp.class)
 public class IndexRecreationIT {
 
+  @Autowired private ElasticTestFacade elasticTestFacade;
   @Autowired private ElasticAdminService elasticAdminService;
   @Test
   void should_load_context() {
@@ -21,6 +22,12 @@ public class IndexRecreationIT {
 
   @Test
   void should_create_index() {
+    elasticTestFacade.createIndex("testikowski");
+
     elasticAdminService.createIndex("testikowski");
+
+    elasticTestFacade.exists("testikowski_clone");
+
+
   }
 }
