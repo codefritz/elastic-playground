@@ -1,10 +1,12 @@
 package de.charton;
 
+import org.springframework.stereotype.Component;
 
 /**
  * User: acharton
  * Date: 22.11.13
  */
-class ElasticService {
+@Component
+public class ElasticService {
 
 }
