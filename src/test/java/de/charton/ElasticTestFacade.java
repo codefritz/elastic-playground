@@ -5,18 +5,21 @@ import co.elastic.clients.elasticsearch.indices.CreateIndexRequest;
 import co.elastic.clients.elasticsearch.core.ExistsRequest;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 class ElasticTestFacade {
   private final ElasticsearchClient elasticsearchClient;
 
   void createIndex(String name) {
     try {
+      log.info("Elastic health report: {}", elasticsearchClient.healthReport());
       CreateIndexRequest cir = new CreateIndexRequest.Builder().index(name).build();
       elasticsearchClient.indices().create(cir);
-    } catch (IOException e) {
+    } catch (Exception e) {
       throw new RuntimeException(e);
     }
   }
