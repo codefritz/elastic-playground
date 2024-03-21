@@ -1,6 +1,7 @@
 package de.charton;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import co.elastic.clients.elasticsearch.core.HealthReportRequest;
 import co.elastic.clients.elasticsearch.indices.CreateIndexRequest;
 import co.elastic.clients.elasticsearch.core.ExistsRequest;
 import java.io.IOException;
@@ -16,7 +17,6 @@ class ElasticTestFacade {
 
   void createIndex(String name) {
     try {
-      log.info("Elastic health report: {}", elasticsearchClient.healthReport());
       CreateIndexRequest cir = new CreateIndexRequest.Builder().index(name).build();
       elasticsearchClient.indices().create(cir);
     } catch (Exception e) {

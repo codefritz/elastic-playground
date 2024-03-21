@@ -1,5 +1,10 @@
 package de.charton;
 
+import com.github.dockerjava.api.model.ExposedPort;
+import com.github.dockerjava.api.model.HostConfig;
+import com.github.dockerjava.api.model.PortBinding;
+import com.github.dockerjava.api.model.Ports;
+import java.time.Duration;
 import org.springframework.boot.test.util.TestPropertyValues;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -17,8 +22,13 @@ public class ElasticInitializer
           .withExposedPorts(9200);
   @Override
   public void initialize(ConfigurableApplicationContext applicationContext) {
-    // remove from environment to have TLS by default enabled
-    container.getEnvMap().remove("xpack.security.enabled");
+    container.withExposedPorts(9200)
+        .withEnv("xpack.security.enabled", "false")
+        .withEnv("ES_JAVA_OPTS", "-Xms256m -Xmx256m")
+        .withStartupTimeout(Duration.ofSeconds(30))
+        .withCreateContainerCmdModifier(cmd -> cmd.withHostConfig(
+            new HostConfig().withPortBindings(new PortBinding(Ports.Binding.bindPort(9200), new ExposedPort(9200)))
+        ));
 
     // custom wait strategy not requiring any TLS tuning...
     container.setWaitStrategy(
