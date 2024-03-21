@@ -4,6 +4,7 @@ import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch.core.HealthReportRequest;
 import co.elastic.clients.elasticsearch.indices.CreateIndexRequest;
 import co.elastic.clients.elasticsearch.core.ExistsRequest;
+import co.elastic.clients.elasticsearch.indices.IndexSettings;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,8 +18,14 @@ class ElasticTestFacade {
 
   void createIndex(String name) {
     try {
-      CreateIndexRequest cir = new CreateIndexRequest.Builder().index(name).build();
-      elasticsearchClient.indices().create(cir);
+      CreateIndexRequest createIndexRequest = new CreateIndexRequest.Builder()
+          .index(name)
+          .settings(new IndexSettings.Builder()
+              .numberOfShards("1")
+              .numberOfReplicas("1")
+              .build())
+          .build();
+      elasticsearchClient.indices().create(createIndexRequest);
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
