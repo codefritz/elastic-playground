@@ -25,7 +25,7 @@ public class ElasticAdminService {
     try {
       String targetIndex = indexNameGenerator.generateIndexName(indexName);
 
-      log.info("Creating index " + targetIndex);
+      log.info("Creating index " + targetIndex + " with " + shards + " shards and " + replicas + " replicas");
       indicesClient.create(create -> create.index(targetIndex)
           .settings(settings -> settings.numberOfShards(String.valueOf(shards)).numberOfReplicas(String.valueOf(replicas))));
 
@@ -33,7 +33,7 @@ public class ElasticAdminService {
       client.reindex(reindex -> reindex.source(source -> source.index(indexName)).dest(dest -> dest.index(targetIndex)));
 
       switchAlias(indexName, targetIndex);
-      
+
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
