@@ -1,10 +1,6 @@
 package de.charton;
 
-import co.elastic.clients.elasticsearch.indices.CreateIndexRequest;
 import co.elastic.clients.elasticsearch.indices.ElasticsearchIndicesClient;
-import co.elastic.clients.elasticsearch.indices.ExistsRequest;
-import co.elastic.clients.elasticsearch.indices.ExistsRequest.Builder;
-import co.elastic.clients.elasticsearch.indices.IndexSettings;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,14 +14,8 @@ class ElasticTestFacade {
 
   void createIndex(String name) {
     try {
-      CreateIndexRequest createIndexRequest = new CreateIndexRequest.Builder()
-          .index(name)
-          .settings(new IndexSettings.Builder()
-              .numberOfShards("2")
-              .numberOfReplicas("2")
-              .build())
-          .build();
-      elasticsearchClient.create(createIndexRequest);
+      elasticsearchClient.create(create -> create.index(name)
+          .settings(settings -> settings.numberOfShards("2").numberOfReplicas("2")));
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
@@ -33,8 +23,8 @@ class ElasticTestFacade {
 
   public void exists(String name) {
     try {
-      ExistsRequest build = new Builder().index(name).build();
-      elasticsearchClient.exists(build).value();
+      elasticsearchClient.exists(cl -> cl.index(name));
+      log.info("Settings: {}", elasticsearchClient.getSettings(get -> get.index(name)).result());
     } catch (IOException e) {
       throw new RuntimeException(e);
     }

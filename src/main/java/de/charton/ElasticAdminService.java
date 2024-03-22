@@ -1,15 +1,8 @@
 package de.charton;
 
-import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch.indices.CloneIndexRequest;
-import co.elastic.clients.elasticsearch.indices.CloneIndexRequest.Builder;
 import co.elastic.clients.elasticsearch.indices.ElasticsearchIndicesClient;
-import co.elastic.clients.elasticsearch.indices.IndexSettingBlocks;
-import co.elastic.clients.elasticsearch.indices.IndexSettings;
-import co.elastic.clients.elasticsearch.indices.PutIndicesSettingsRequest;
-import co.elastic.clients.util.ObjectBuilder;
 import java.io.IOException;
-import java.util.function.Function;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -23,10 +16,8 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class ElasticAdminService {
 
-  private final ElasticsearchClient elasticsearchClient;
+  private final ElasticsearchIndicesClient indicesClient;
   public void createIndex(String indexName) {
-
-    ElasticsearchIndicesClient indicesClient = elasticsearchClient.indices();
 
     try {
 
