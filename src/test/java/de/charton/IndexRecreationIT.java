@@ -23,6 +23,7 @@ public class IndexRecreationIT {
   @Test
   void should_create_index() {
     elasticTestFacade.createIndex("testikowski");
+    elasticTestFacade.exists("testikowski");
 
     elasticAdminService.createIndex("testikowski");
 

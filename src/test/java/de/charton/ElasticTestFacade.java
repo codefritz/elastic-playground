@@ -1,9 +1,9 @@
 package de.charton;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
-import co.elastic.clients.elasticsearch.core.HealthReportRequest;
 import co.elastic.clients.elasticsearch.indices.CreateIndexRequest;
-import co.elastic.clients.elasticsearch.core.ExistsRequest;
+import co.elastic.clients.elasticsearch.indices.ExistsRequest;
+import co.elastic.clients.elasticsearch.indices.ExistsRequest.Builder;
 import co.elastic.clients.elasticsearch.indices.IndexSettings;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
@@ -21,8 +21,8 @@ class ElasticTestFacade {
       CreateIndexRequest createIndexRequest = new CreateIndexRequest.Builder()
           .index(name)
           .settings(new IndexSettings.Builder()
-              .numberOfShards("1")
-              .numberOfReplicas("1")
+              .numberOfShards("2")
+              .numberOfReplicas("2")
               .build())
           .build();
       elasticsearchClient.indices().create(createIndexRequest);
@@ -33,7 +33,8 @@ class ElasticTestFacade {
 
   public void exists(String name) {
     try {
-      elasticsearchClient.exists(new ExistsRequest.Builder().index(name).build());
+      ExistsRequest build = new Builder().index(name).build();
+      elasticsearchClient.indices().exists(build).value();
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
