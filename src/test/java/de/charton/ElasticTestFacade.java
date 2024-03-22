@@ -10,12 +10,15 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 @Slf4j
 class ElasticTestFacade {
-  private final ElasticsearchIndicesClient elasticsearchClient;
+  private final ElasticsearchIndicesClient indicesClient;
 
   void createIndex(String name) {
     try {
-      elasticsearchClient.create(create -> create.index(name)
+      String testIndexName = name + "_org";
+      indicesClient.create(create -> create.index(testIndexName)
           .settings(settings -> settings.numberOfShards("2").numberOfReplicas("2")));
+
+      indicesClient.putAlias(alias -> alias.index(testIndexName).name(name));
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
@@ -23,8 +26,8 @@ class ElasticTestFacade {
 
   public void exists(String name) {
     try {
-      elasticsearchClient.exists(cl -> cl.index(name));
-      log.info("Settings: {}", elasticsearchClient.getSettings(get -> get.index(name)).result());
+      indicesClient.exists(cl -> cl.index(name));
+      log.info("Settings: {}", indicesClient.getSettings(get -> get.index(name)).result());
     } catch (IOException e) {
       throw new RuntimeException(e);
     }

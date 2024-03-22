@@ -27,7 +27,7 @@ public class IndexRecreationIT {
 
     elasticAdminService.reIndex("testikowski", 5, 3);
 
-    elasticTestFacade.exists("testikowski_clone");
+    elasticTestFacade.exists("testikowski");
 
 
   }
