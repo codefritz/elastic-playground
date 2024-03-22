@@ -1,6 +1,6 @@
 package de.charton;
 
-import co.elastic.clients.elasticsearch.indices.CloneIndexRequest;
+import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch.indices.ElasticsearchIndicesClient;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
@@ -17,22 +17,13 @@ import org.springframework.stereotype.Component;
 public class ElasticAdminService {
 
   private final ElasticsearchIndicesClient indicesClient;
-  public void createIndex(String indexName) {
+  private final ElasticsearchClient client;
+  public void reIndex(String indexName, int shards, int replicas) {
 
     try {
-
-      boolean value = true;
-      enableWriteBlocks(indicesClient, true);
-
-      CloneIndexRequest createIndexRequestBuilder =
-          new CloneIndexRequest.Builder()
-              .index(indexName)
-              .target(indexName + "_clone")
-              .build();
-
-      indicesClient.clone(createIndexRequestBuilder);
-
-      enableWriteBlocks(indicesClient, false);
+      String targetIndex = indexName + "_clone";
+      indicesClient.create(create -> create.index(targetIndex).settings(settings -> settings.numberOfShards(String.valueOf(shards)).numberOfReplicas(String.valueOf(replicas))));
+      client.reindex(reindex -> reindex.source(source -> source.index(indexName)).dest(destination -> destination.index(targetIndex)));
 
     } catch (IOException e) {
       throw new RuntimeException(e);
@@ -41,13 +32,4 @@ public class ElasticAdminService {
 
   }
 
-  private static void enableWriteBlocks(ElasticsearchIndicesClient indicesClient, boolean value) throws IOException {
-    indicesClient
-        .putSettings(put -> put
-            .settings(stetting -> stetting
-                .blocks(blocks -> {
-                  return blocks
-                      .write(value);
-                })));
-  }
 }
