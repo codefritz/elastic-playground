@@ -1,7 +1,7 @@
 package de.charton;
 
-import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch.indices.CreateIndexRequest;
+import co.elastic.clients.elasticsearch.indices.ElasticsearchIndicesClient;
 import co.elastic.clients.elasticsearch.indices.ExistsRequest;
 import co.elastic.clients.elasticsearch.indices.ExistsRequest.Builder;
 import co.elastic.clients.elasticsearch.indices.IndexSettings;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 @Slf4j
 class ElasticTestFacade {
-  private final ElasticsearchClient elasticsearchClient;
+  private final ElasticsearchIndicesClient elasticsearchClient;
 
   void createIndex(String name) {
     try {
@@ -25,7 +25,7 @@ class ElasticTestFacade {
               .numberOfReplicas("2")
               .build())
           .build();
-      elasticsearchClient.indices().create(createIndexRequest);
+      elasticsearchClient.create(createIndexRequest);
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
@@ -34,7 +34,7 @@ class ElasticTestFacade {
   public void exists(String name) {
     try {
       ExistsRequest build = new Builder().index(name).build();
-      elasticsearchClient.indices().exists(build).value();
+      elasticsearchClient.exists(build).value();
     } catch (IOException e) {
       throw new RuntimeException(e);
     }

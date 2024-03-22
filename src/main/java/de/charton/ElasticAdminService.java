@@ -30,11 +30,8 @@ public class ElasticAdminService {
 
     try {
 
-      indicesClient
-          .putSettings(put -> put
-              .settings(stetting -> stetting
-                  .blocks(blocks -> blocks
-                      .write(true))));
+      boolean value = true;
+      enableWriteBlocks(indicesClient, true);
 
       CloneIndexRequest createIndexRequestBuilder =
           new CloneIndexRequest.Builder()
@@ -42,11 +39,24 @@ public class ElasticAdminService {
               .target(indexName + "_clone")
               .build();
 
-        indicesClient.clone(createIndexRequestBuilder);
+      indicesClient.clone(createIndexRequestBuilder);
+
+      enableWriteBlocks(indicesClient, false);
+
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
     log.info("Creating index " + indexName);
 
+  }
+
+  private static void enableWriteBlocks(ElasticsearchIndicesClient indicesClient, boolean value) throws IOException {
+    indicesClient
+        .putSettings(put -> put
+            .settings(stetting -> stetting
+                .blocks(blocks -> {
+                  return blocks
+                      .write(value);
+                })));
   }
 }
