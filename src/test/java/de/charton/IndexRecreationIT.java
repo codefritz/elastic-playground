@@ -24,6 +24,8 @@ public class IndexRecreationIT {
   void should_create_index() {
     elasticTestFacade.createIndex("testikowski");
     elasticTestFacade.exists("testikowski");
+    elasticTestFacade.addDocument("testikowski", "{\"name\":\"test\"}");
+
 
     elasticAdminService.reIndex("testikowski", 5, 3);
 
