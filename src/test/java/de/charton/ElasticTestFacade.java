@@ -39,6 +39,8 @@ class ElasticTestFacade {
     try {
       indicesClient.exists(cl -> cl.index(name));
       log.info("Settings: {}", indicesClient.getSettings(get -> get.index(name)).result());
+      long indexCount = esClient.count(count -> count.index(name)).count();
+      log.info("Index count: {}", indexCount);
     } catch (IOException e) {
       throw new RuntimeException(e);
     }

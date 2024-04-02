@@ -1,6 +1,7 @@
 package de.charton;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import co.elastic.clients.elasticsearch._types.Time;
 import co.elastic.clients.elasticsearch.indices.ElasticsearchIndicesClient;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +31,14 @@ public class ElasticAdminService {
           .settings(settings -> settings.numberOfShards(String.valueOf(shards)).numberOfReplicas(String.valueOf(replicas))));
 
       log.info("Reindexing " + indexName + " to " + targetIndex);
+
+      indicesClient.getSettings(get -> get.index(indexName)).result().values().forEach(settings -> log.info("Settings: " + settings));
+      indicesClient.putSettings(settings -> settings.index(indexName).settings(it -> it.refreshInterval(new Time.Builder().time("-1").build())));
+
       client.reindex(reindex -> reindex.source(source -> source.index(indexName)).dest(dest -> dest.index(targetIndex)));
+
+      log.info("Reindexing done, reset refresh interval to 30s");
+      indicesClient.putSettings(settings -> settings.index(indexName).settings(it -> it.refreshInterval(new Time.Builder().time("30s").build())));
 
       switchAlias(indexName, targetIndex);
 
