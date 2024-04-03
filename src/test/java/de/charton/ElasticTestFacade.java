@@ -1,6 +1,7 @@
 package de.charton;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import co.elastic.clients.elasticsearch.core.IndexResponse;
 import co.elastic.clients.elasticsearch.indices.ElasticsearchIndicesClient;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
@@ -14,9 +15,19 @@ class ElasticTestFacade {
   private final ElasticsearchIndicesClient indicesClient;
   private final ElasticsearchClient esClient;
 
-  void addDocument(String indexName, String document) {
+  void addDocument(String indexName, String id) {
     try {
-      esClient.index(index -> index.index(indexName).document(new Document("1", "test")).id("1"));
+      esClient.index(index -> index
+          .index(indexName)
+          .document(new Document(id, "test")).id(id));
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  void refresh(String indexName) {
+    try {
+      indicesClient.refresh(refresh -> refresh.index(indexName));
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
@@ -28,7 +39,6 @@ class ElasticTestFacade {
       indicesClient.create(create -> create.index(testIndexName)
           .settings(settings -> settings.numberOfShards("2").numberOfReplicas("2"))
       );
-
       indicesClient.putAlias(alias -> alias.index(testIndexName).name(name));
     } catch (Exception e) {
       throw new RuntimeException(e);

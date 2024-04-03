@@ -23,12 +23,16 @@ public class IndexRecreationIT {
   @Test
   void should_create_index() {
     elasticTestFacade.createIndex("testikowski");
-    elasticTestFacade.exists("testikowski");
-    elasticTestFacade.addDocument("testikowski", "{\"name\":\"test\"}");
 
+    for (int i = 0; i < 1000; i++) {
+      elasticTestFacade.addDocument("testikowski", String.valueOf(i));
+    }
+    elasticTestFacade.refresh("testikowski");
+    elasticTestFacade.exists("testikowski");
 
     elasticAdminService.reIndex("testikowski", 5, 3);
 
+    elasticTestFacade.refresh("testikowski");
     elasticTestFacade.exists("testikowski");
 
 
