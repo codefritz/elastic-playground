@@ -2,6 +2,7 @@ package de.charton;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch._types.Time;
+import co.elastic.clients.elasticsearch._types.Time.Builder;
 import co.elastic.clients.elasticsearch.indices.ElasticsearchIndicesClient;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
@@ -17,11 +18,13 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class ElasticAdminService {
 
+  public static final Time REFRESH_DISABLED = new Builder().time("-1").build();
+  public static final Time REFRESH_30_SEC = new Builder().time("30s").build();
   private final ElasticsearchIndicesClient indicesClient;
   private final ElasticsearchClient client;
   private final TimeBasedIndexNameGenerator indexNameGenerator;
 
-  public void reIndex(String indexName, int shards, int replicas) {
+  public void reShard(String indexName, int shards, int replicas) {
 
     try {
       String targetIndex = indexNameGenerator.generateIndexName(indexName);
@@ -32,13 +35,11 @@ public class ElasticAdminService {
 
       log.info("Reindexing " + indexName + " to " + targetIndex);
 
-      indicesClient.getSettings(get -> get.index(indexName)).result().values().forEach(settings -> log.info("Settings: " + settings));
-      indicesClient.putSettings(settings -> settings.index(indexName).settings(it -> it.refreshInterval(new Time.Builder().time("-1").build())));
-
+      indicesClient.putSettings(settings -> settings.index(indexName).settings(it -> it.refreshInterval(REFRESH_DISABLED)));
       client.reindex(reindex -> reindex.source(source -> source.index(indexName)).dest(dest -> dest.index(targetIndex)));
 
       log.info("Reindexing done, reset refresh interval to 30s");
-      indicesClient.putSettings(settings -> settings.index(indexName).settings(it -> it.refreshInterval(new Time.Builder().time("30s").build())));
+      indicesClient.putSettings(settings -> settings.index(indexName).settings(it -> it.refreshInterval(REFRESH_30_SEC)));
 
       switchAlias(indexName, targetIndex);
 

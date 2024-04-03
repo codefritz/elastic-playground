@@ -30,7 +30,7 @@ public class IndexRecreationIT {
     elasticTestFacade.refresh("testikowski");
     elasticTestFacade.exists("testikowski");
 
-    elasticAdminService.reIndex("testikowski", 5, 3);
+    elasticAdminService.reShard("testikowski", 5, 3);
 
     elasticTestFacade.refresh("testikowski");
     elasticTestFacade.exists("testikowski");
