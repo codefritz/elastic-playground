@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.2.3</version>
+		<version>3.2.4</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>de.charton</groupId>
@@ -15,6 +15,9 @@
 	<description>Demo project for Spring Boot with Elastic Search</description>
 	<properties>
 		<java.version>21</java.version>
+		<elasticsearch-java.version>8.13.1</elasticsearch-java.version>
+		<lombok.version>1.18.32</lombok.version>
+		<testcontainers.version>1.19.7</testcontainers.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -24,12 +27,12 @@
 		<dependency>
 			<groupId>co.elastic.clients</groupId>
 			<artifactId>elasticsearch-java</artifactId>
-			<version>8.12.2</version>
+			<version>${elasticsearch-java.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<version>1.18.30</version>
+			<version>${lombok.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<!-- test dependencies -->
@@ -41,18 +44,16 @@
 		<dependency>
 			<groupId>org.testcontainers</groupId>
 			<artifactId>testcontainers</artifactId>
-			<version>1.19.7</version>
+			<version>${testcontainers.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.testcontainers</groupId>
 			<artifactId>elasticsearch</artifactId>
-			<version>1.19.7</version>
+			<version>${testcontainers.version}</version>
 			<scope>test</scope>
 		</dependency>
-
 	</dependencies>
-
 	<build>
 		<plugins>
 			<plugin>
