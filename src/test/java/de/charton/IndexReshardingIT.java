@@ -11,7 +11,9 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 @SpringJUnitConfig
 @ContextConfiguration(initializers = {ElasticInitializer.class})
 @Import(ElasticServiceApp.class)
-public class IndexRecreationIT {
+public class IndexReshardingIT {
+
+  private static final String INDEX_NAME = "testikowski";
 
   @Autowired private ElasticTestFacade elasticTestFacade;
   @Autowired private ElasticAdminService elasticAdminService;
@@ -21,20 +23,24 @@ public class IndexRecreationIT {
   }
 
   @Test
-  void should_create_index() {
-    elasticTestFacade.createIndex("testikowski");
+  void shouldReshardIndex() {
+    givenIndexWithDocuments();
+
+    elasticAdminService.reShard(INDEX_NAME, 5, 3);
+
+    elasticTestFacade.refresh(INDEX_NAME);
+    elasticTestFacade.exists(INDEX_NAME);
+
+
+  }
+
+  private void givenIndexWithDocuments() {
+    elasticTestFacade.createIndex(INDEX_NAME);
 
     for (int i = 0; i < 1000; i++) {
-      elasticTestFacade.addDocument("testikowski", String.valueOf(i));
+      elasticTestFacade.addDocument(INDEX_NAME, String.valueOf(i));
     }
-    elasticTestFacade.refresh("testikowski");
-    elasticTestFacade.exists("testikowski");
-
-    elasticAdminService.reShard("testikowski", 5, 3);
-
-    elasticTestFacade.refresh("testikowski");
-    elasticTestFacade.exists("testikowski");
-
-
+    elasticTestFacade.refresh(INDEX_NAME);
+    elasticTestFacade.exists(INDEX_NAME);
   }
 }
