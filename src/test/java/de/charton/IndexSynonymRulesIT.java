@@ -11,32 +11,21 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 @SpringJUnitConfig
 @ContextConfiguration(initializers = {ElasticInitializer.class})
 @Import(ElasticServiceApp.class)
-public class IndexReshardingIT {
+public class IndexSynonymRulesIT {
 
   private static final String INDEX_NAME = "testikowski";
 
   @Autowired private ElasticTestFacade elasticTestFacade;
-  @Autowired private ElasticAdminService elasticAdminService;
-
   @Test
-  void shouldReshardIndex() {
-    givenIndexWithDocuments();
-
-    elasticAdminService.reShard(INDEX_NAME, 5, 3);
-
-    elasticTestFacade.refresh(INDEX_NAME);
-    elasticTestFacade.exists(INDEX_NAME);
-
-
-  }
-
-  private void givenIndexWithDocuments() {
+  void shouldUseSynonym() {
     elasticTestFacade.createIndex(INDEX_NAME);
+    elasticTestFacade.addDocument(INDEX_NAME, "1", "TV");
+    elasticTestFacade.addDocument(INDEX_NAME, "2", "Samsung");
 
-    for (int i = 0; i < 1000; i++) {
-      elasticTestFacade.addDocument(INDEX_NAME, String.valueOf(i), "test");
-    }
+    elasticTestFacade.addSynonym("TV -> patchenkino");
+
     elasticTestFacade.refresh(INDEX_NAME);
-    elasticTestFacade.exists(INDEX_NAME);
+
   }
+
 }
