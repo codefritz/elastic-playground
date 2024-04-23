@@ -4,6 +4,7 @@ import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch.indices.ElasticsearchIndicesClient;
 import co.elastic.clients.elasticsearch.synonyms.ElasticsearchSynonymsClient;
 import co.elastic.clients.elasticsearch.synonyms.PutSynonymRequest;
+import co.elastic.clients.elasticsearch.synonyms.PutSynonymRuleRequest;
 import co.elastic.clients.elasticsearch.synonyms.SynonymRule;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
@@ -49,9 +50,12 @@ class ElasticTestFacade {
   }
 
   void addSynonym(String synonym) {
+
     PutSynonymRequest putSynonymRequest =
-        PutSynonymRequest.of(it -> it.id("syn_rule_42").synonymsSet(SynonymRule.of(rule -> rule.synonyms(synonym))));
+        PutSynonymRequest.of(it -> it.id("synonyms_set_test1")
+            .synonymsSet(new SynonymRule.Builder().id("r1").synonyms(synonym).build()));
     try {
+      // synonymsClient.putSynonymRule(PutSynonymRuleRequest.of(it -> it.setId("synonyms_set_test1").ruleId("r1").synonyms(synonym)));
       synonymsClient.putSynonym(putSynonymRequest);
     } catch (IOException e) {
       throw new RuntimeException(e);
