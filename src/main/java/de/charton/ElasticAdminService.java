@@ -9,23 +9,18 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-/**
- * User: acharton
- * Date: 22.11.13
- */
 @Component
 @Slf4j
 @RequiredArgsConstructor
 public class ElasticAdminService {
 
-  public static final Time REFRESH_DISABLED = new Builder().time("-1").build();
-  public static final Time REFRESH_30_SEC = new Builder().time("30s").build();
+  private static final Time REFRESH_DISABLED = new Builder().time("-1").build();
+  private static final Time REFRESH_30_SEC = new Builder().time("30s").build();
   private final ElasticsearchIndicesClient indicesClient;
   private final ElasticsearchClient client;
   private final TimeBasedIndexNameGenerator indexNameGenerator;
 
   public void reShard(String indexName, int shards, int replicas) {
-
     try {
       String targetIndex = indexNameGenerator.generateIndexName(indexName);
 

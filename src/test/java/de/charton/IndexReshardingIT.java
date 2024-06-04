@@ -22,7 +22,7 @@ public class IndexReshardingIT {
   void shouldReshardIndex() {
     givenIndexWithDocuments();
 
-    elasticAdminService.reShard(INDEX_NAME, 5, 3);
+    elasticAdminService.reShard(INDEX_NAME, 100, 1);
 
     elasticTestFacade.refresh(INDEX_NAME);
     elasticTestFacade.exists(INDEX_NAME);

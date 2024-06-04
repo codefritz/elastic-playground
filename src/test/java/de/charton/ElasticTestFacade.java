@@ -41,7 +41,7 @@ class ElasticTestFacade {
     try {
       String testIndexName = name + "_org";
       indicesClient.create(create -> create.index(testIndexName)
-          .settings(settings -> settings.numberOfShards("2").numberOfReplicas("2"))
+          .settings(settings -> settings.numberOfShards("100").numberOfReplicas("2"))
       );
       indicesClient.putAlias(alias -> alias.index(testIndexName).name(name));
     } catch (Exception e) {
