@@ -4,7 +4,6 @@ import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch.indices.ElasticsearchIndicesClient;
 import co.elastic.clients.elasticsearch.synonyms.ElasticsearchSynonymsClient;
 import co.elastic.clients.elasticsearch.synonyms.PutSynonymRequest;
-import co.elastic.clients.elasticsearch.synonyms.PutSynonymRuleRequest;
 import co.elastic.clients.elasticsearch.synonyms.SynonymRule;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
