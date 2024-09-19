@@ -1,4 +1,4 @@
-package de.charton;
+package de.charton.config;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

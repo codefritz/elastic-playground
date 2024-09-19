@@ -19,10 +19,13 @@ public class IndexSynonymRulesIT {
   @Test
   void shouldUseSynonym() {
     elasticTestFacade.createIndex(INDEX_NAME);
+    elasticTestFacade.addSynonym("TV -> patchenkino");
+
+
+
     elasticTestFacade.addDocument(INDEX_NAME, "1", "TV");
     elasticTestFacade.addDocument(INDEX_NAME, "2", "Samsung");
 
-    elasticTestFacade.addSynonym("TV -> patchenkino");
 
     elasticTestFacade.refresh(INDEX_NAME);
 

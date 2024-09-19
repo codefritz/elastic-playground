@@ -1,4 +1,4 @@
-package de.charton;
+package de.charton.admin;
 
 import co.elastic.clients.util.VisibleForTesting;
 import java.time.Clock;

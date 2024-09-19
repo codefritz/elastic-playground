@@ -1,4 +1,4 @@
-package de.charton;
+package de.charton.admin;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch._types.Time;

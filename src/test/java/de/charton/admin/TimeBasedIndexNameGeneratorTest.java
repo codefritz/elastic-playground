@@ -1,4 +1,4 @@
-package de.charton;
+package de.charton.admin;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
