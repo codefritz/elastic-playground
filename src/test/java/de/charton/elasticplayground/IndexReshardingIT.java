@@ -1,8 +1,9 @@
-package de.charton;
+package de.charton.elasticplayground;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import de.charton.admin.ElasticAdminService;
+import de.charton.elasticplayground.admin.ElasticAdminService;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
@@ -12,6 +13,7 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 @SpringJUnitConfig
 @ContextConfiguration(initializers = {ElasticInitializer.class})
 @Import(ElasticServiceApp.class)
+@Slf4j
 public class IndexReshardingIT {
 
   private static final String INDEX_NAME = "testikowski";
@@ -34,7 +36,10 @@ public class IndexReshardingIT {
   private void givenIndexWithDocuments() {
     elasticTestFacade.createIndex(INDEX_NAME);
 
-    for (int i = 0; i < 1000; i++) {
+    int numDocuments = 100;
+    LOG.info("Adding {} documents to index {}", numDocuments, INDEX_NAME);
+
+    for (int i = 0; i < numDocuments; i++) {
       elasticTestFacade.addDocument(INDEX_NAME, String.valueOf(i), "test");
     }
     elasticTestFacade.refresh(INDEX_NAME);

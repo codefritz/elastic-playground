@@ -1,4 +1,4 @@
-package de.charton;
+package de.charton.elasticplayground;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -20,8 +20,6 @@ public class IndexSynonymRulesIT {
   void shouldUseSynonym() {
     elasticTestFacade.createIndex(INDEX_NAME);
     elasticTestFacade.addSynonym("TV -> patchenkino");
-
-
 
     elasticTestFacade.addDocument(INDEX_NAME, "1", "TV");
     elasticTestFacade.addDocument(INDEX_NAME, "2", "Samsung");

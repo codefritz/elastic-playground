@@ -1,4 +1,4 @@
-package de.charton;
+package de.charton.elasticplayground;
 
 import com.github.dockerjava.api.model.ExposedPort;
 import com.github.dockerjava.api.model.HostConfig;

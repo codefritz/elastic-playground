@@ -1,4 +1,4 @@
-package de.charton.admin;
+package de.charton.elasticplayground.admin;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

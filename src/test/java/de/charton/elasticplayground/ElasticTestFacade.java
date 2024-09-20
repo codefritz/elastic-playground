@@ -1,11 +1,14 @@
-package de.charton;
+package de.charton.elasticplayground;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch.indices.ElasticsearchIndicesClient;
 import co.elastic.clients.elasticsearch.synonyms.ElasticsearchSynonymsClient;
 import co.elastic.clients.elasticsearch.synonyms.PutSynonymRequest;
 import co.elastic.clients.elasticsearch.synonyms.SynonymRule;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -39,7 +42,16 @@ class ElasticTestFacade {
   void createIndex(String name) {
     try {
       String testIndexName = name + "_org";
-      indicesClient.create(create -> create.index(testIndexName)
+      InputStream mappingjson = new ByteArrayInputStream("""
+          {
+            "properties": {
+              "name": {
+                "type": "text"
+              }
+            }
+          }
+          """.getBytes(StandardCharsets.UTF_8));
+      indicesClient.create(create -> create.index(testIndexName).mappings(mapping -> mapping.withJson(mappingjson))
           .settings(settings -> settings.numberOfShards("100").numberOfReplicas("2"))
       );
       indicesClient.putAlias(alias -> alias.index(testIndexName).name(name));

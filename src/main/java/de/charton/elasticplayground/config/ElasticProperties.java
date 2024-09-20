@@ -1,4 +1,4 @@
-package de.charton.config;
+package de.charton.elasticplayground.config;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

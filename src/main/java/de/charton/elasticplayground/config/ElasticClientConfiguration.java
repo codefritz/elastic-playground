@@ -1,4 +1,4 @@
-package de.charton.config;
+package de.charton.elasticplayground.config;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch.indices.ElasticsearchIndicesClient;
