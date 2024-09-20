@@ -1,4 +1,7 @@
 package de.charton.elasticplayground;
 
-public record Document(String id, String name) {
+import lombok.Builder;
+
+@Builder
+public record Document(String id, String title, String description) {
 }

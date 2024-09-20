@@ -1,6 +1,7 @@
 package de.charton.elasticplayground;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import co.elastic.clients.elasticsearch._types.mapping.DynamicMapping;
 import co.elastic.clients.elasticsearch.indices.ElasticsearchIndicesClient;
 import co.elastic.clients.elasticsearch.synonyms.ElasticsearchSynonymsClient;
 import co.elastic.clients.elasticsearch.synonyms.PutSynonymRequest;
@@ -25,7 +26,7 @@ class ElasticTestFacade {
     try {
       esClient.index(index -> index
           .index(indexName)
-          .document(new Document(id, text)).id(id));
+          .document(Document.builder().id(id).title(null).description(text).build()));
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
@@ -45,13 +46,19 @@ class ElasticTestFacade {
       InputStream mappingjson = new ByteArrayInputStream("""
           {
             "properties": {
-              "name": {
+              "id": {
+                "type": "long"
+              },
+              "title": {
+                "type": "text"
+              },
+              "description": {
                 "type": "text"
               }
             }
           }
           """.getBytes(StandardCharsets.UTF_8));
-      indicesClient.create(create -> create.index(testIndexName).mappings(mapping -> mapping.withJson(mappingjson))
+      indicesClient.create(create -> create.index(testIndexName).mappings(mapping -> mapping.withJson(mappingjson).dynamic(DynamicMapping.Strict))
           .settings(settings -> settings.numberOfShards("100").numberOfReplicas("2"))
       );
       indicesClient.putAlias(alias -> alias.index(testIndexName).name(name));
