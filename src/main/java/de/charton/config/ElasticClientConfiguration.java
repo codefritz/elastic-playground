@@ -20,7 +20,7 @@ class ElasticClientConfiguration {
   public ElasticsearchClient elasticSearchClient(ElasticProperties elasticsearchProperties) {
     // URL and API key
     String serverUrl = elasticsearchProperties.getHost() + ":" + elasticsearchProperties.getPort();
-    log.info("Creating elastic rest client connecting to host {}", serverUrl);
+    LOG.info("Creating elastic rest client connecting to host {}", serverUrl);
 
     // Create the low-level client
     RestClient restClient = RestClient

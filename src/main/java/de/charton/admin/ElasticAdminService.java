@@ -24,16 +24,18 @@ public class ElasticAdminService {
     try {
       String targetIndex = indexNameGenerator.generateIndexName(indexName);
 
-      log.info("Creating index {} with {} shards and {} replicas", targetIndex, shards, replicas);
+      LOG.info("Creating index {} with {} shards and {} replicas", targetIndex, shards, replicas);
       indicesClient.create(create -> create.index(targetIndex)
-          .settings(settings -> settings.numberOfShards(String.valueOf(shards)).numberOfReplicas(String.valueOf(replicas))));
+          .settings(settings -> settings
+              .numberOfShards(String.valueOf(shards))
+              .numberOfReplicas(String.valueOf(replicas))));
 
-      log.info("Reindexing {} to {}", indexName, targetIndex);
+      LOG.info("Reindexing {} to {}", indexName, targetIndex);
 
       indicesClient.putSettings(settings -> settings.index(indexName).settings(it -> it.refreshInterval(REFRESH_DISABLED)));
       client.reindex(reindex -> reindex.source(source -> source.index(indexName)).dest(dest -> dest.index(targetIndex)));
 
-      log.info("Reindexing done, reset refresh interval to {}", REFRESH_30_SEC);
+      LOG.info("Reindexing done, reset refresh interval to {}", REFRESH_30_SEC);
       indicesClient.putSettings(settings -> settings.index(indexName).settings(it -> it.refreshInterval(REFRESH_30_SEC)));
 
       switchAlias(indexName, targetIndex);
@@ -41,13 +43,13 @@ public class ElasticAdminService {
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
-    log.info("Creating index {}", indexName);
+    LOG.info("Creating index {}", indexName);
   }
 
   private void switchAlias(String indexName, String targetIndex) throws IOException {
     String sourceIndex = indicesClient.getAlias(get -> get.index(indexName)).result().keySet().stream().findFirst().get();
-    log.info("Deleting alias {} from {}", indexName, sourceIndex);
-    log.info("Putting alias {} to {}", indexName, targetIndex);
+    LOG.info("Deleting alias {} from {}", indexName, sourceIndex);
+    LOG.info("Putting alias {} to {}", indexName, targetIndex);
     indicesClient.updateAliases(update -> update
         .actions(actions -> actions
             .remove(remove -> remove.index(sourceIndex).alias(indexName)))
