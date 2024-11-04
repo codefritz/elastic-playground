@@ -1,7 +1,7 @@
 elastic-playground
 =================
 
-My test project with elastic search
+My elastic search playground project. 
 
 ## elastic-indexer
 
