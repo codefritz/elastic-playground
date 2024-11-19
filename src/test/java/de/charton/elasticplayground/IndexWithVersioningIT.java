@@ -46,7 +46,6 @@ public class IndexWithVersioningIT {
   @Test
   void shouldThrowExceptionOnIndexSameDocumentVersion() {
     String id = String.valueOf(2);
-    elasticTestFacade.addDocument(INDEX_NAME, id, "bmw");
     elasticTestFacade.addDocumentWithExternalVersion(INDEX_NAME, id, "bmw", 1);
     elasticTestFacade.addDocumentWithExternalVersion(INDEX_NAME, id, "bmw", 2);
 
