@@ -1,6 +1,8 @@
 package de.charton.elasticplayground;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import co.elastic.clients.elasticsearch._types.OpType;
+import co.elastic.clients.elasticsearch._types.VersionType;
 import co.elastic.clients.elasticsearch._types.mapping.DynamicMapping;
 import co.elastic.clients.elasticsearch.indices.ElasticsearchIndicesClient;
 import co.elastic.clients.elasticsearch.synonyms.ElasticsearchSynonymsClient;
@@ -27,6 +29,17 @@ class ElasticTestFacade {
       esClient.index(index -> index
           .index(indexName)
           .document(Document.builder().id(id).title(null).description(text).build()));
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  void addDocumentWithExternalVersion(String indexName, String id, String text, long version) {
+    try {
+      esClient.index(index -> index
+          .index(indexName)
+          .document(Document.builder().id(id).title(null).description(text).build())
+          .id(id).version(version).versionType(VersionType.External).opType(OpType.Index));
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
@@ -87,6 +100,16 @@ class ElasticTestFacade {
       long indexCount = esClient.count(count -> count.index(name)).count();
       LOG.info("Index count: {}", indexCount);
     } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  public void deleteIndex(String indexName) {
+    try {
+      indicesClient.delete(delete -> delete.index(indexName)).wait();
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    } catch (InterruptedException e) {
       throw new RuntimeException(e);
     }
   }
