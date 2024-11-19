@@ -28,6 +28,7 @@ class ElasticTestFacade {
     try {
       esClient.index(index -> index
           .index(indexName)
+          .id(id)
           .document(Document.builder().id(id).title(null).description(text).build()));
     } catch (IOException e) {
       throw new RuntimeException(e);

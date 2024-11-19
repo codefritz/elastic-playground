@@ -34,31 +34,40 @@ public class IndexWithVersioningIT {
   }
 
   @Test
-  void shouldThrowExceptionOnIndexSameDocumentVersion() {
-    // elasticTestFacade.addDocument(INDEX_NAME, String.valueOf(1), "bmw");
-
-    elasticTestFacade.addDocumentWithExternalVersion(INDEX_NAME, String.valueOf(1), "bmw", 1);
-    elasticTestFacade.addDocumentWithExternalVersion(INDEX_NAME, String.valueOf(1), "bmw", 2);
+  void shouldThrowExceptionOnIndexSameDocument() {
+    String id = String.valueOf(1);
+    elasticTestFacade.addDocument(INDEX_NAME, id, "bmw");
 
     assertThrows(Exception.class, () -> {
-      elasticTestFacade.addDocumentWithExternalVersion(INDEX_NAME, String.valueOf(1), "bmw", 2);
+      elasticTestFacade.addDocumentWithExternalVersion(INDEX_NAME, id, "bmw", 1);
+    });
+  }
+
+  @Test
+  void shouldThrowExceptionOnIndexSameDocumentVersion() {
+    String id = String.valueOf(2);
+    elasticTestFacade.addDocument(INDEX_NAME, id, "bmw");
+    elasticTestFacade.addDocumentWithExternalVersion(INDEX_NAME, id, "bmw", 1);
+    elasticTestFacade.addDocumentWithExternalVersion(INDEX_NAME, id, "bmw", 2);
+
+    assertThrows(Exception.class, () -> {
+      elasticTestFacade.addDocumentWithExternalVersion(INDEX_NAME, id, "bmw", 2);
     });
 
-    elasticTestFacade.addDocumentWithExternalVersion(INDEX_NAME, String.valueOf(1), "bmw", 3);
-
+    elasticTestFacade.addDocumentWithExternalVersion(INDEX_NAME, id, "bmw", 3);
   }
 
   @Test
   void shouldThrowExceptionOnIndexSameDocumentVersionWhileSkipVersions() {
-    elasticTestFacade.addDocumentWithExternalVersion(INDEX_NAME, String.valueOf(2), "bmw", 1);
-    elasticTestFacade.addDocumentWithExternalVersion(INDEX_NAME, String.valueOf(2), "bmw", 100);
+    String id = String.valueOf(3);
+    elasticTestFacade.addDocumentWithExternalVersion(INDEX_NAME, id, "bmw", 1);
+    elasticTestFacade.addDocumentWithExternalVersion(INDEX_NAME, id, "bmw", 100);
 
     assertThrows(Exception.class, () -> {
-      elasticTestFacade.addDocumentWithExternalVersion(INDEX_NAME, String.valueOf(2), "bmw", 50);
+      elasticTestFacade.addDocumentWithExternalVersion(INDEX_NAME, id, "bmw", 50);
     });
 
-    elasticTestFacade.addDocumentWithExternalVersion(INDEX_NAME, String.valueOf(2), "bmw", 300);
-
+    elasticTestFacade.addDocumentWithExternalVersion(INDEX_NAME, id, "bmw", 300);
   }
 
 }
