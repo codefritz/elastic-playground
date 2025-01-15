@@ -20,6 +20,9 @@ public class ElasticAdminService {
   private final ElasticsearchClient client;
   private final TimeBasedIndexNameGenerator indexNameGenerator;
 
+  /**
+   * Re-shard an index, including re-index from old index.
+   */
   public void reShard(String indexName, int shards, int replicas) {
     try {
       String targetIndex = indexNameGenerator.generateIndexName(indexName);

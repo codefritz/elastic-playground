@@ -57,7 +57,7 @@ class ElasticTestFacade {
   void createIndex(String name) {
     try {
       String testIndexName = name + "_org";
-      InputStream mappingjson = new ByteArrayInputStream("""
+      InputStream mappingJson = new ByteArrayInputStream("""
           {
             "properties": {
               "id": {
@@ -72,8 +72,8 @@ class ElasticTestFacade {
             }
           }
           """.getBytes(StandardCharsets.UTF_8));
-      indicesClient.create(create -> create.index(testIndexName).mappings(mapping -> mapping.withJson(mappingjson).dynamic(DynamicMapping.Strict))
-          .settings(settings -> settings.numberOfShards("100").numberOfReplicas("2"))
+      indicesClient.create(create -> create.index(testIndexName).mappings(mapping -> mapping.withJson(mappingJson).dynamic(DynamicMapping.Strict))
+          .settings(settings -> settings.numberOfShards("50").numberOfReplicas("2"))
       );
       indicesClient.putAlias(alias -> alias.index(testIndexName).name(name));
     } catch (Exception e) {
@@ -82,7 +82,6 @@ class ElasticTestFacade {
   }
 
   void addSynonym(String synonym) {
-
     PutSynonymRequest putSynonymRequest =
         PutSynonymRequest.of(it -> it.id("synonyms_set_test1")
             .synonymsSet(new SynonymRule.Builder().id("r1").synonyms(synonym).build()));
