@@ -1,14 +1,19 @@
 package de.charton.elasticplayground.admin;
 
-import co.elastic.clients.util.VisibleForTesting;
 import java.time.Clock;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 class TimeBasedIndexNameGenerator {
+
+  private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("uuuu.MM.dd-HH.mm")
+      .withLocale(Locale.getDefault())
+      .withZone(ZoneId.systemDefault());
 
   private final Clock clock;
 
@@ -16,25 +21,12 @@ class TimeBasedIndexNameGenerator {
     this(Clock.systemDefaultZone());
   }
 
-  @VisibleForTesting
-  TimeBasedIndexNameGenerator(Clock clock) {
-    this.clock = clock;
-  }
-
   String generateIndexName(String indexPrefix) {
     return indexPrefix + "-" + currentDateTimeAsString();
   }
 
-  DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu.MM.dd-HH.mm")
-      .withLocale(Locale.getDefault())
-      .withZone(ZoneId.systemDefault());
-
   private String currentDateTimeAsString() {
-    // current date time logic
-    return dtf.format(clock.instant());
+    return FORMATTER.format(clock.instant());
   }
 
-  public static void main(String[] args) {
-    System.out.println(new TimeBasedIndexNameGenerator().generateIndexName("test"));
-  }
 }
