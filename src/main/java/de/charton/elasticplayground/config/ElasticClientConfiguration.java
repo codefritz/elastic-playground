@@ -19,7 +19,7 @@ class ElasticClientConfiguration {
   @Bean
   public ElasticsearchClient elasticSearchClient(ElasticProperties elasticsearchProperties) {
     // URL and API key
-    String serverUrl = elasticsearchProperties.getHost() + ":" + elasticsearchProperties.getPort();
+    String serverUrl = getServerUrl(elasticsearchProperties);
     LOG.info("Creating elastic rest client connecting to host {}", serverUrl);
 
     // Create the low-level client
@@ -33,6 +33,10 @@ class ElasticClientConfiguration {
 
     // And create the API client
     return new ElasticsearchClient(transport);
+  }
+
+  private static String getServerUrl(ElasticProperties elasticsearchProperties) {
+    return elasticsearchProperties.getHost() + ":" + elasticsearchProperties.getPort();
   }
 
   @Bean
