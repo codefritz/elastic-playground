@@ -8,10 +8,7 @@ import co.elastic.clients.elasticsearch.indices.ElasticsearchIndicesClient;
 import co.elastic.clients.elasticsearch.synonyms.ElasticsearchSynonymsClient;
 import co.elastic.clients.elasticsearch.synonyms.PutSynonymRequest;
 import co.elastic.clients.elasticsearch.synonyms.SynonymRule;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -57,22 +54,14 @@ class ElasticTestFacade {
   void createIndex(String name) {
     try {
       String testIndexName = name + "_org";
-      InputStream mappingJson = new ByteArrayInputStream("""
-          {
-            "properties": {
-              "id": {
-                "type": "long"
-              },
-              "title": {
-                "type": "text"
-              },
-              "description": {
-                "type": "text"
-              }
-            }
-          }
-          """.getBytes(StandardCharsets.UTF_8));
-      indicesClient.create(create -> create.index(testIndexName).mappings(mapping -> mapping.withJson(mappingJson).dynamic(DynamicMapping.Strict))
+      indicesClient.create(create -> create
+          .index(testIndexName)
+          .mappings(mapping -> mapping
+              .properties("id", prop -> prop.long_(l -> l))
+              .properties("title", prop -> prop.text(t -> t))
+              .properties("description", prop -> prop.text(t -> t))
+              .dynamic(DynamicMapping.Strict)
+          )
           .settings(settings -> settings.numberOfShards("50").numberOfReplicas("2"))
       );
       indicesClient.putAlias(alias -> alias.index(testIndexName).name(name));
@@ -96,7 +85,7 @@ class ElasticTestFacade {
   public void exists(String name) {
     try {
       indicesClient.exists(cl -> cl.index(name));
-      LOG.info("Settings: {}", indicesClient.getSettings(get -> get.index(name)).result());
+      LOG.info("Settings: {}", indicesClient.getSettings(get -> get.index(name)).settings());
       long indexCount = esClient.count(count -> count.index(name)).count();
       LOG.info("Index count: {}", indexCount);
     } catch (IOException e) {

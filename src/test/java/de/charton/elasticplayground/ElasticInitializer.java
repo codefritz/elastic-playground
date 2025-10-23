@@ -15,7 +15,8 @@ import org.testcontainers.elasticsearch.ElasticsearchContainer;
 public class ElasticInitializer
     implements ApplicationContextInitializer<ConfigurableApplicationContext> {
   private static final String IMAGE_NAME =
-      "docker.elastic.co/elasticsearch/elasticsearch:8.0.0";
+      "docker.elastic.co/elasticsearch/elasticsearch:8.19.5";
+  // "docker.elastic.co/elasticsearch/elasticsearch:8.19.5-arm64";
 
   private static final ElasticsearchContainer container =
       new ElasticsearchContainer(IMAGE_NAME)
@@ -24,6 +25,7 @@ public class ElasticInitializer
   public void initialize(ConfigurableApplicationContext applicationContext) {
     container.withExposedPorts(9200)
         .withEnv("xpack.security.enabled", "false")
+        .withEnv("discovery.type", "single-node")
         .withEnv("ES_JAVA_OPTS", "-Xms256m -Xmx256m")
         .withStartupTimeout(Duration.ofSeconds(30))
         .withCreateContainerCmdModifier(cmd -> cmd.withHostConfig(

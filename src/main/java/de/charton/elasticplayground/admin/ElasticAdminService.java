@@ -50,7 +50,7 @@ public class ElasticAdminService {
   }
 
   private void switchAlias(String indexName, String targetIndex) throws IOException {
-    String sourceIndex = indicesClient.getAlias(get -> get.index(indexName)).result().keySet().stream().findFirst().get();
+    String sourceIndex = indicesClient.getAlias(get -> get.index(indexName)).aliases().keySet().stream().findFirst().orElseThrow();
     LOG.info("Deleting alias {} from {}", indexName, sourceIndex);
     LOG.info("Putting alias {} to {}", indexName, targetIndex);
     indicesClient.updateAliases(update -> update
