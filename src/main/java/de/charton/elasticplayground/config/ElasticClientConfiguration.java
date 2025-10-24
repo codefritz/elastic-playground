@@ -5,7 +5,6 @@ import co.elastic.clients.elasticsearch.indices.ElasticsearchIndicesClient;
 import co.elastic.clients.elasticsearch.synonyms.ElasticsearchSynonymsClient;
 import co.elastic.clients.json.jackson.JacksonJsonpMapper;
 import co.elastic.clients.transport.ElasticsearchTransport;
-import co.elastic.clients.transport.rest_client.RestClientOptions;
 import co.elastic.clients.transport.rest_client.RestClientTransport;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpHost;
@@ -30,7 +29,7 @@ class ElasticClientConfiguration {
 
     // Create the transport with a Jackson mapper
     ElasticsearchTransport transport = new RestClientTransport(
-        restClient, new JacksonJsonpMapper(), RestClientOptions.of(null));
+        restClient, new JacksonJsonpMapper());
 
     // And create the API client
     return new ElasticsearchClient(transport);

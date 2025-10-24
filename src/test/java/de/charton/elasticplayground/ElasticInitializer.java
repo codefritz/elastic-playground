@@ -8,6 +8,7 @@ import java.time.Duration;
 import org.springframework.boot.test.util.TestPropertyValues;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.testcontainers.containers.wait.strategy.HttpWaitStrategy;
 import org.testcontainers.containers.wait.strategy.LogMessageWaitStrategy;
 import org.testcontainers.elasticsearch.ElasticsearchContainer;
 
@@ -15,7 +16,7 @@ import org.testcontainers.elasticsearch.ElasticsearchContainer;
 public class ElasticInitializer
     implements ApplicationContextInitializer<ConfigurableApplicationContext> {
   private static final String IMAGE_NAME =
-      "docker.elastic.co/elasticsearch/elasticsearch:8.19.5";
+      "docker.elastic.co/elasticsearch/elasticsearch:9.2.0";
   // "docker.elastic.co/elasticsearch/elasticsearch:8.19.5-arm64";
 
   private static final ElasticsearchContainer container =
@@ -34,7 +35,11 @@ public class ElasticInitializer
 
     // custom wait strategy not requiring any TLS tuning...
     container.setWaitStrategy(
-        new LogMessageWaitStrategy().withRegEx(".*\"message\":\"started\".*"));
+        new HttpWaitStrategy().forPort(9200)
+            .forPath("/_cluster/health")
+            .forStatusCode(200)
+            .withReadTimeout(Duration.ofSeconds(30))
+    );
 
     container.start();
 
