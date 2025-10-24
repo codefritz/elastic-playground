@@ -18,7 +18,7 @@ class TimeBasedIndexNameGenerator {
   private final Clock clock;
 
   TimeBasedIndexNameGenerator() {
-    this(Clock.systemDefaultZone());
+    this(Clock.systemUTC());
   }
 
   String generateIndexName(String indexPrefix) {

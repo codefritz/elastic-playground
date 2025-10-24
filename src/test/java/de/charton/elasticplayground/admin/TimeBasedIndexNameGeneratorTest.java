@@ -11,7 +11,7 @@ class TimeBasedIndexNameGeneratorTest {
 
     @Test
     void generateIndexName_WhenTimeStampGiven_ShouldUsedAsIndexSuffix() {
-      Clock clock = Clock.fixed(Instant.parse("2024-09-21T05:45:45Z"), ZoneId.of("GMT"));
+      Clock clock = Clock.fixed(Instant.parse("2024-09-21T05:45:45Z"), ZoneId.of("UTC"));
       TimeBasedIndexNameGenerator timeBasedIndexNameGenerator = new TimeBasedIndexNameGenerator(clock);
 
       String indexName = timeBasedIndexNameGenerator.generateIndexName("test");
