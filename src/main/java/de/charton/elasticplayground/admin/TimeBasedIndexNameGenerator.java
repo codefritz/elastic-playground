@@ -13,7 +13,7 @@ class TimeBasedIndexNameGenerator {
 
   private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("uuuu.MM.dd-HH.mm")
       .withLocale(Locale.getDefault())
-      .withZone(ZoneId.systemDefault());
+      .withZone(ZoneId.of("UTC"));
 
   private final Clock clock;
 
