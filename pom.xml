@@ -17,8 +17,8 @@
 		<java.version>21</java.version>
 		<elasticsearch-java.version>9.2.2</elasticsearch-java.version>
 		<lombok.version>1.18.42</lombok.version>
-		<testcontainers.version>2.0.2</testcontainers.version>
-		<testcontainer.elasticsearch.version>1.21.3</testcontainer.elasticsearch.version>
+		<testcontainers.version>2.0.3</testcontainers.version>
+		<testcontainer.elasticsearch.version>1.21.4</testcontainer.elasticsearch.version>
 	</properties>
 	<dependencies>
 		<dependency>
