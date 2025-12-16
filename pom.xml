@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>4.0.0</version>
+		<version>${spring-boot.version}</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>de.charton</groupId>
@@ -15,7 +15,11 @@
 	<description>Demo project for Spring Boot with Elastic Search</description>
 	<properties>
 		<java.version>21</java.version>
+		<spring-boot.version>4.0.0</spring-boot.version>
 		<elasticsearch-java.version>9.2.2</elasticsearch-java.version>
+		<elasticsearch-rest-client.version>8.15.4</elasticsearch-rest-client.version>
+		<httpclient.version>4.5.14</httpclient.version>
+		<junit.version>4.13.2</junit.version>
 		<lombok.version>1.18.42</lombok.version>
 		<testcontainers.version>2.0.2</testcontainers.version>
 		<testcontainer.elasticsearch.version>1.21.3</testcontainer.elasticsearch.version>
@@ -29,6 +33,17 @@
 			<groupId>co.elastic.clients</groupId>
 			<artifactId>elasticsearch-java</artifactId>
 			<version>${elasticsearch-java.version}</version>
+		</dependency>
+		<!-- Apache HTTP Client for RestClient (needed for Elasticsearch low-level client) -->
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>${httpclient.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.elasticsearch.client</groupId>
+			<artifactId>elasticsearch-rest-client</artifactId>
+			<version>${elasticsearch-rest-client.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
@@ -45,7 +60,7 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.13.2</version>
+			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -66,6 +81,29 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<excludes>
+						<exclude>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+						</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>21</source>
+					<target>21</target>
+					<annotationProcessorPaths>
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+							<version>${lombok.version}</version>
+						</path>
+					</annotationProcessorPaths>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

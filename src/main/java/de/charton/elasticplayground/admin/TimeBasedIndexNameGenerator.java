@@ -4,11 +4,9 @@ import java.time.Clock;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
-@RequiredArgsConstructor
 class TimeBasedIndexNameGenerator {
 
   private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("uuuu.MM.dd-HH.mm")
@@ -19,6 +17,10 @@ class TimeBasedIndexNameGenerator {
 
   TimeBasedIndexNameGenerator() {
     this(Clock.systemUTC());
+  }
+
+  TimeBasedIndexNameGenerator(Clock clock) {
+    this.clock = clock;
   }
 
   String generateIndexName(String indexPrefix) {
