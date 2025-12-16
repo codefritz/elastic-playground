@@ -6,21 +6,23 @@ import co.elastic.clients.elasticsearch.synonyms.ElasticsearchSynonymsClient;
 import co.elastic.clients.json.jackson.JacksonJsonpMapper;
 import co.elastic.clients.transport.ElasticsearchTransport;
 import co.elastic.clients.transport.rest_client.RestClientTransport;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.http.HttpHost;
 import org.elasticsearch.client.RestClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@Slf4j
 class ElasticClientConfiguration {
+
+  private static final Logger log = LoggerFactory.getLogger(ElasticClientConfiguration.class);
 
   @Bean
   public ElasticsearchClient elasticSearchClient(ElasticProperties elasticsearchProperties) {
     // URL and API key
     String serverUrl = getServerUrl(elasticsearchProperties);
-    LOG.info("Creating elastic rest client connecting to host {}", serverUrl);
+    log.info("Creating elastic rest client connecting to host {}", serverUrl);
 
     // Create the low-level client
     RestClient restClient = RestClient
