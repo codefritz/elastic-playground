@@ -20,7 +20,7 @@
 		<httpclient.version>4.5.14</httpclient.version>
 		<junit.version>4.13.2</junit.version>
 		<lombok.version>1.18.46</lombok.version>
-		<testcontainers.version>2.0.3</testcontainers.version>
+		<testcontainers.version>2.0.5</testcontainers.version>
 		<testcontainer.elasticsearch.version>1.21.4</testcontainer.elasticsearch.version>
 	</properties>
 	<dependencies>
